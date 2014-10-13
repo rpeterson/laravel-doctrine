@@ -10,14 +10,23 @@ class SqlMapper implements Mapper
 	 */
 	public function map(array $configuration)
 	{
-		return [
-			'driver' => $this->driver($configuration['driver']),
+		$config = [
 			'host' => $configuration['host'],
 			'dbname' => $configuration['database'],
 			'user' => $configuration['username'],
 			'password' => $configuration['password'],
 			'charset' => $configuration['charset']
 		];
+
+		if (isset($configuration['driver'])) {
+			$config['driver'] = $this->driver($configuration['driver']);
+		}
+
+		if (isset($configuration['driver_class'])) {
+			$config['driverClass'] = $configuration['driver_class'];
+		}
+
+		return $config;
 	}
 
 	/**
@@ -28,6 +37,9 @@ class SqlMapper implements Mapper
 	 */
 	public function isAppropriateFor(array $configuration)
 	{
+		if (!isset($configuration['driver']) && $configuration['driver_class']) {
+			return in_array($configuration['driver_class'], ['FDB\SQL\DBAL\PDOFoundationDBSQLDriver']);
+		}
 		return in_array($configuration['driver'], ['sqlsrv', 'mysql', 'pgsql', 'fdbsql']);
 	}
 
@@ -39,7 +51,7 @@ class SqlMapper implements Mapper
 	 */
 	public function driver($l4Driver)
 	{
-		$doctrineDrivers = ['mysql' => 'pdo_mysql', 'sqlsrv' => 'pdo_sqlsrv', 'pgsql' => 'pdo_pgsql', 'fdbsql' => 'pdo_fdbsql'];
+		$doctrineDrivers = ['mysql' => 'pdo_mysql', 'sqlsrv' => 'pdo_sqlsrv', 'pgsql' => 'pdo_pgsql'];
 
 		return $doctrineDrivers[$l4Driver];
 	}
