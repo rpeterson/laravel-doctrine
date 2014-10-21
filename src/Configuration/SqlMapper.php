@@ -51,7 +51,7 @@ class SqlMapper implements Mapper
 	 */
 	public function driver($l4Driver)
 	{
-		$doctrineDrivers = ['mysql' => 'pdo_mysql', 'sqlsrv' => 'pdo_sqlsrv', 'pgsql' => 'pdo_pgsql'];
+		$doctrineDrivers = ['mysql' => 'pdo_mysql', 'sqlsrv' => 'pdo_sqlsrv', 'pgsql' => 'pdo_pgsql', 'fdbsql' => 'pdo_fdbsql'];
 
 		return $doctrineDrivers[$l4Driver];
 	}
